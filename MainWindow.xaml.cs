@@ -47,7 +47,6 @@ namespace SnakeWPF
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             DrawGameArea();
-            StartNewGame();
         }
 
         #region Game Area
@@ -223,5 +222,34 @@ namespace SnakeWPF
         }
 
         #endregion
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            SnakeDirection originalSnakeDirection = _snakeDirection;
+            switch (e.Key)
+            {
+                case Key.Up:
+                    if (_snakeDirection != SnakeDirection.Down)
+                        _snakeDirection = SnakeDirection.Up;
+                    break;
+                case Key.Down:
+                    if (_snakeDirection != SnakeDirection.Up)
+                        _snakeDirection = SnakeDirection.Down;
+                    break;
+                case Key.Left:
+                    if (_snakeDirection != SnakeDirection.Right)
+                        _snakeDirection = SnakeDirection.Left;
+                    break;
+                case Key.Right:
+                    if (_snakeDirection != SnakeDirection.Left)
+                        _snakeDirection = SnakeDirection.Right;
+                    break;
+                case Key.Space:
+                    StartNewGame();
+                    break;
+            }
+            if (_snakeDirection != originalSnakeDirection)
+                MoveSnake();
+        }
     }
 }
