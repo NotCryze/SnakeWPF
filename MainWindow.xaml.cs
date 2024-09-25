@@ -23,7 +23,7 @@ namespace SnakeWPF
             InitializeComponent();
         }
 
-        const int _snakeSquareSize = 20;
+        const int SnakeSquareSize = 20;
         private SolidColorBrush _snakeBodyBrush = Brushes.Blue;
         private SolidColorBrush _snakeHeadBrush = Brushes.DarkBlue;
         private List<SnakePart> _snakeParts = new List<SnakePart>();
@@ -47,8 +47,8 @@ namespace SnakeWPF
             {
                 Rectangle rectangle = new Rectangle
                 {
-                    Width = _snakeSquareSize,
-                    Height = _snakeSquareSize,
+                    Width = SnakeSquareSize,
+                    Height = SnakeSquareSize,
                     Fill = isPrimaryColor ? Brushes.Green : Brushes.DarkGreen
                 };
 
@@ -57,12 +57,12 @@ namespace SnakeWPF
                 Canvas.SetLeft(rectangle, nextX);
 
                 isPrimaryColor = !isPrimaryColor;
-                nextX += _snakeSquareSize;
+                nextX += SnakeSquareSize;
 
                 if(nextX >= GameArea.ActualWidth)
                 {
                     nextX = 0;
-                    nextY += _snakeSquareSize;
+                    nextY += SnakeSquareSize;
                     rowCounter++;
                     isPrimaryColor = rowCounter % 2 != 0;
                 }
@@ -82,8 +82,8 @@ namespace SnakeWPF
                 {
                     snakePart.UiElement = new Rectangle()
                     {
-                        Width = _snakeSquareSize,
-                        Height = _snakeSquareSize,
+                        Width = SnakeSquareSize,
+                        Height = SnakeSquareSize,
                         Fill = snakePart.IsHead ? _snakeHeadBrush : _snakeBodyBrush
                     };
                     GameArea.Children.Add(snakePart.UiElement);
@@ -116,16 +116,16 @@ namespace SnakeWPF
             switch (_snakeDirection)
             {
                 case SnakeDirection.Left:
-                    nextX -= _snakeSquareSize;
+                    nextX -= SnakeSquareSize;
                     break;
                 case SnakeDirection.Right:
-                    nextX += _snakeSquareSize;
+                    nextX += SnakeSquareSize;
                     break;
                 case SnakeDirection.Up:
-                    nextY -= _snakeSquareSize;
+                    nextY -= SnakeSquareSize;
                     break;
                 case SnakeDirection.Down:
-                    nextY += _snakeSquareSize;
+                    nextY += SnakeSquareSize;
                     break;
             }
 
