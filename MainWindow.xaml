@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SnakeWPF"
         mc:Ignorable="d"
-        Title="MainWindow" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
+        Title="Snake" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
         ContentRendered="Window_ContentRendered" KeyDown="Window_KeyDown">
     <Border BorderBrush="Black" BorderThickness="5">
         <Canvas Name="GameArea" ClipToBounds="True" Width="400" Height="400">
