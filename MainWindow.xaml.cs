@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using static SnakeWPF.MainWindow;
 
 namespace SnakeWPF
@@ -21,20 +22,27 @@ namespace SnakeWPF
         public MainWindow()
         {
             InitializeComponent();
+            gameTickTimer.Tick += GameTickTimer_Tick;
         }
 
-        const int SnakeSquareSize = 20;
         private SolidColorBrush _snakeBodyBrush = Brushes.Blue;
         private SolidColorBrush _snakeHeadBrush = Brushes.DarkBlue;
         private List<SnakePart> _snakeParts = new List<SnakePart>();
 
+        const int SnakeSquareSize = 20;
+        const int SnakeStartLength = 3;
+        const int SnakeStartSpeed = 400;
+        const int SnakeSpeedThreshold = 100;
         public enum SnakeDirection { Left, Right, Up, Down };
         private SnakeDirection _snakeDirection = SnakeDirection.Right;
         private int _snakeLength;
 
+        private DispatcherTimer gameTickTimer = new DispatcherTimer();
+
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             DrawGameArea();
+            StartNewGame();
         }
         private void DrawGameArea()
         {
@@ -138,6 +146,25 @@ namespace SnakeWPF
             
             // Draws the snake after it has been moved
             DrawSnake();       
+        }
+
+        private void GameTickTimer_Tick(object sender, EventArgs e)
+        {
+            MoveSnake();
+        }
+
+        private void StartNewGame()
+        {
+            _snakeLength = SnakeStartLength;
+            _snakeDirection = SnakeDirection.Right;
+            _snakeParts.Add(new SnakePart() { Position = new Point(SnakeSquareSize * 5, SnakeSquareSize * 5) });
+            gameTickTimer.Interval = TimeSpan.FromMilliseconds(SnakeStartSpeed);
+
+            // Draw the snake  
+            DrawSnake();
+
+            // Starts off the timer to make the snake move         
+            gameTickTimer.IsEnabled = true;
         }
     }
 }
