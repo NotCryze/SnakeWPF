@@ -444,12 +444,41 @@ namespace SnakeWPF
             SnakeScore.Visibility = Visibility.Collapsed;
             SnakeSpeed.Visibility = Visibility.Collapsed;
             bdrInstructions.Visibility = Visibility.Collapsed;
+            bdrSettings.Visibility = Visibility.Collapsed;
         }
 
         private void ButtonShowInstructions_Click(object sender, RoutedEventArgs e)
         {
             bdrMenu.Visibility = Visibility.Collapsed;
             bdrInstructions.Visibility = Visibility.Visible;
+        }
+        private void btnShowSettings_Click(object sender, RoutedEventArgs e)
+        {
+            bdrMenu.Visibility = Visibility.Collapsed;
+            bdrSettings.Visibility = Visibility.Visible;
+        }
+
+        #endregion
+
+        #region Settings
+
+        private void btnClearLeaderboard_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Would you like to clear the Leaderboard? This can not be undone.", "Clear Leaderboard", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    Highscores.Clear();
+                    SaveLeaderboard();
+                    break;
+                case MessageBoxResult.No:
+                case MessageBoxResult.Cancel:
+                    MessageBox.Show("Ok, f*ck off then!", "F*ck Off", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion
