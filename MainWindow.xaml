@@ -33,7 +33,6 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
     <DockPanel Background="Black">
         <Grid DockPanel.Dock="Top" Name="pnlTitleBar">
             <Grid.ColumnDefinitions>
