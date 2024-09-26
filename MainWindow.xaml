@@ -73,7 +73,8 @@
             <Button Grid.Column="2" DockPanel.Dock="Right" Name="btnClose" Click="BtnClose_Click" FontFamily="Segoe UI" Style="{StaticResource closeBtn}">X</Button>
 
         </Grid>
-
+        
+        <MediaElement Name="mediaElement" LoadedBehavior="Manual" UnloadedBehavior="Stop" />
         <Canvas Name="GameArea" ClipToBounds="True" Width="500" Height="500">
             <!--Menu-->
             <Border BorderBrush="Black" BorderThickness="2" Width="500" Height="500" Name="bdrMenu" Panel.ZIndex="1">
@@ -181,12 +182,21 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     
                     <TextBlock Grid.Column="0" Grid.Row="0" Margin="5, 10">Clear Leaderboard</TextBlock>
                     <Button Grid.Column="1" Grid.Row="0" Margin="5, 10" Name="btnClearLeaderboard" Click="btnClearLeaderboard_Click">Clear</Button>
+
+                    <WrapPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="5, 10">
+                        <TextBlock>Volume:</TextBlock>
+                        <TextBlock Name="volumeValue" VerticalAlignment="Center"></TextBlock>
+                    </WrapPanel>
+                    <Slider Grid.Column="1" Grid.Row="1" Minimum="0" Maximum="1" Value="0.1" Width="200" VerticalAlignment="Top" Margin="10" Name="volumeSlider" ValueChanged="volumeSlider_ValueChanged"/>
                     
+                    
+
                     <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="999" Grid.ColumnSpan="2">
                         <Button Margin="0,0,0,5" Padding="5" Click="ButtonBackToMenu_Click">Back to Menu</Button>
                     </StackPanel>

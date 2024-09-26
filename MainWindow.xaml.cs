@@ -22,6 +22,7 @@ namespace SnakeWPF
             _gameTickTimer.Tick += GameTickTimer_Tick;
             LoadLeaderboard();
             Style = (Style)FindResource(typeof(Window));
+            volumeSlider.Value = 0.1;
         }
 
         private SolidColorBrush _snakeBodyColor = Brushes.Blue;
@@ -259,6 +260,7 @@ namespace SnakeWPF
         private void EndGame()
         {
             bool isNewHighscore = false;
+            PlayAudio("snakeGameOver.mp3");
             if (_currentScore > 0)
             {
                 int lowestHighscore = (this.Highscores.Count > 0 ? this.Highscores.Min(x => x.Score) : 0);
@@ -318,6 +320,7 @@ namespace SnakeWPF
             int timerInterval = Math.Max(SnakeSpeedThreshold, (int)_gameTickTimer.Interval.TotalMilliseconds - (_currentScore * 2));
             _gameTickTimer.Interval = TimeSpan.FromMilliseconds(timerInterval);
             GameArea.Children.Remove(_snakeFood);
+            PlayAudio("snakeEat.mp3");
             DrawSnakeFood();
             UpdateGameStatus();
         }
@@ -428,6 +431,8 @@ namespace SnakeWPF
 
             SaveLeaderboard();
 
+            txtPlayerName.Text = "";
+
             bdrNewHighscore.Visibility = Visibility.Collapsed;
             bdrLeaderboard.Visibility = Visibility.Visible;
         }
@@ -480,8 +485,24 @@ namespace SnakeWPF
                     break;
             }
         }
+        private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            mediaElement.Volume = volumeSlider.Value;
+            volumeValue.Text = Math.Floor(mediaElement.Volume * 100).ToString();
+        }
 
         #endregion
 
+        #region Audio
+
+        private void PlayAudio(string file)
+        {
+            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); // Gets the path to the current user directory
+            string filePath = userPath + @"\source\repos\SnakeWPF\Assets\Sounds\" + file;
+            mediaElement.Source = new Uri(filePath);
+            mediaElement.Play();
+        }
+
+        #endregion
     }
 }
