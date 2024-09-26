@@ -243,7 +243,8 @@ namespace SnakeWPF
 
         private void UpdateGameStatus()
         {
-            this.Title = "Snake - Score: " + _currentScore + " - Game speed: " + _gameTickTimer.Interval.TotalMilliseconds;
+            this.tbStatusScore.Text = _currentScore.ToString();
+            this.tbStatusSpeed.Text = _gameTickTimer.Interval.TotalMilliseconds.ToString();
         }
 
         private void EndGame()
@@ -331,6 +332,11 @@ namespace SnakeWPF
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
         #endregion
