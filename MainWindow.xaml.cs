@@ -371,10 +371,12 @@ namespace SnakeWPF
 
         private void LoadHighscoreList()
         {
-            if (File.Exists(@"C:\Users\Asus\source\repos\SnakeWPF\snake_highscorelist.xml"))
+            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); // Gets the path to the current user directory
+
+            if (File.Exists($@"{userPath}\source\repos\SnakeWPF\snake_highscorelist.xml"))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(List<SnakeHighscore>));
-                using (Stream reader = new FileStream(@"C:\Users\Asus\source\repos\SnakeWPF\snake_highscorelist.xml", FileMode.Open))
+                using (Stream reader = new FileStream($@"{userPath}\source\repos\SnakeWPF\snake_highscorelist.xml", FileMode.Open))
                 {
                     List<SnakeHighscore> tempList = (List<SnakeHighscore>)serializer.Deserialize(reader);
                     this.Highscores.Clear();
@@ -386,9 +388,10 @@ namespace SnakeWPF
 
         private void SaveHighscoreList()
         {
+            string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); // Gets the path to the current user directory
 
             XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<SnakeHighscore>));
-            using (Stream writer = new FileStream(@"C:\Users\Asus\source\repos\SnakeWPF\snake_highscorelist.xml", FileMode.Create))
+            using (Stream writer = new FileStream($@"{userPath}\source\repos\SnakeWPF\snake_highscorelist.xml", FileMode.Create))
             {
                 serializer.Serialize(writer, this.Highscores);
             }
