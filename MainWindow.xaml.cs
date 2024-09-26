@@ -325,5 +325,14 @@ namespace SnakeWPF
         }
 
         #endregion
+
+        #region Window
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        #endregion
     }
 }
