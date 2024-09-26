@@ -96,7 +96,7 @@
                         <Button Margin="0,0,0,5" Padding="5" FontSize="20" HorizontalAlignment="Center" Width="150" Name="btnStartBewGane" Click="BtnStartNewGame_Click" IsDefault="True">START</Button>
                         <Button Margin="0,0,0,5" Padding="5" FontSize="10" HorizontalAlignment="Center" Width="150" Name="btnShowLeaderboard" Click="BtnShowLeaderboard_Click" >Leaderboard</Button>
                         <Button Margin="0,0,0,5" Padding="5" FontSize="10" HorizontalAlignment="Center" Width="150" Name="btnShowInstructions" Click="ButtonShowInstructions_Click">Instructions</Button>
-                        <Button Margin="0,0,0,5" Padding="5" FontSize="10" HorizontalAlignment="Center" Width="150" >Settings</Button>
+                        <Button Margin="0,0,0,5" Padding="5" FontSize="10" HorizontalAlignment="Center" Width="150" Name="btnShowSettings" Click="btnShowSettings_Click">Settings</Button>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -172,6 +172,26 @@
                 </Grid>
             </Border>
 
+            <!--Settings-->
+            <Border BorderBrush="Silver" BorderThickness="2" Width="500" Height="500" Name="bdrSettings" Panel.ZIndex="1" Visibility="Collapsed">
+                <Grid Background="LightBlue">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="5, 10">Clear Leaderboard</TextBlock>
+                    <Button Grid.Column="1" Grid.Row="0" Margin="5, 10" Name="btnClearLeaderboard" Click="btnClearLeaderboard_Click">Clear</Button>
+                    
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="999" Grid.ColumnSpan="2">
+                        <Button Margin="0,0,0,5" Padding="5" Click="ButtonBackToMenu_Click">Back to Menu</Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
         </Canvas>
     </DockPanel>
 </Window>
