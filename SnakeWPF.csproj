@@ -9,10 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Storage\**" />
-    <EmbeddedResource Remove="Storage\**" />
-    <None Remove="Storage\**" />
-    <Page Remove="Storage\**" />
+    <Compile Remove="Fonts\**" />
+    <EmbeddedResource Remove="Fonts\**" />
+    <None Remove="Fonts\**" />
+    <Page Remove="Fonts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\Fonts\PressStart2P-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\PressStart2P-Regular.ttf" />
   </ItemGroup>
 
 </Project>

@@ -20,7 +20,8 @@ namespace SnakeWPF
         {
             InitializeComponent();
             _gameTickTimer.Tick += GameTickTimer_Tick;
-            LoadHighscoreList();
+            LoadLeaderboard();
+            Style = (Style)FindResource(typeof(Window));
         }
 
         private SolidColorBrush _snakeBodyColor = Brushes.Blue;
@@ -43,7 +44,7 @@ namespace SnakeWPF
         private UIElement _snakeFood = null;
         private SolidColorBrush _foodColor = Brushes.Red;
 
-        const int MaxHighscoreListEntryCount = 5;
+        const int MaxHighscoreListEntryCount = 10;
         public ObservableCollection<SnakeHighscore> Highscores { get; set; } = new ObservableCollection<SnakeHighscore>();
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -198,8 +199,8 @@ namespace SnakeWPF
                     if (_snakeDirection != SnakeDirection.Left)
                         _snakeDirection = SnakeDirection.Right;
                     break;
-                case Key.Space:
-                    StartNewGame();
+                case Key.Escape:
+                    EndGame();
                     break;
             }
             if (_snakeDirection != originalSnakeDirection && _gameTickTimer.IsEnabled)
@@ -210,11 +211,14 @@ namespace SnakeWPF
 
         #region Game
 
-        private void StartNewGame()
+        private void BtnStartNewGame_Click(object sender, RoutedEventArgs e)
         {
-            bdrWelcomeMessage.Visibility = Visibility.Collapsed;
-            bdrHighscoreList.Visibility = Visibility.Collapsed;
+            bdrMenu.Visibility = Visibility.Collapsed;
+            bdrLeaderboard.Visibility = Visibility.Collapsed;
             bdrEndOfGame.Visibility = Visibility.Collapsed;
+
+            SnakeScore.Visibility = Visibility.Visible;
+            SnakeSpeed.Visibility = Visibility.Visible;
 
             // Remove potential dead snake parts
             foreach (SnakePart snakeBodyPart in _snakeParts)
@@ -351,7 +355,10 @@ namespace SnakeWPF
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
@@ -361,22 +368,22 @@ namespace SnakeWPF
 
         #endregion
 
-        #region HighScore
+        #region Leaderboard
 
-        private void BtnShowHighscoreList_Click(object sender, RoutedEventArgs e)
+        private void BtnShowLeaderboard_Click(object sender, RoutedEventArgs e)
         {
-            bdrWelcomeMessage.Visibility = Visibility.Collapsed;
-            bdrHighscoreList.Visibility = Visibility.Visible;
+            bdrMenu.Visibility = Visibility.Collapsed;
+            bdrLeaderboard.Visibility = Visibility.Visible;
         }
 
-        private void LoadHighscoreList()
+        private void LoadLeaderboard()
         {
             string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); // Gets the path to the current user directory
 
-            if (File.Exists($@"{userPath}\source\repos\SnakeWPF\snake_highscorelist.xml"))
+            if (File.Exists($@"{userPath}\source\repos\SnakeWPF\snake_leaderboard.xml"))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(List<SnakeHighscore>));
-                using (Stream reader = new FileStream($@"{userPath}\source\repos\SnakeWPF\snake_highscorelist.xml", FileMode.Open))
+                using (Stream reader = new FileStream($@"{userPath}\source\repos\SnakeWPF\snake_leaderboard.xml", FileMode.Open))
                 {
                     List<SnakeHighscore> tempList = (List<SnakeHighscore>)serializer.Deserialize(reader);
                     this.Highscores.Clear();
@@ -386,18 +393,18 @@ namespace SnakeWPF
             }
         }
 
-        private void SaveHighscoreList()
+        private void SaveLeaderboard()
         {
             string userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); // Gets the path to the current user directory
 
             XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<SnakeHighscore>));
-            using (Stream writer = new FileStream($@"{userPath}\source\repos\SnakeWPF\snake_highscorelist.xml", FileMode.Create))
+            using (Stream writer = new FileStream($@"{userPath}\source\repos\SnakeWPF\snake_leaderboard.xml", FileMode.Create))
             {
                 serializer.Serialize(writer, this.Highscores);
             }
         }
 
-        private void BtnAddToHighscoreList_Click(object sender, RoutedEventArgs e)
+        private void BtnAddToLeaderboard_Click(object sender, RoutedEventArgs e)
         {
             int newIndex = 0;
 
@@ -419,12 +426,33 @@ namespace SnakeWPF
             while (this.Highscores.Count > MaxHighscoreListEntryCount)
                 this.Highscores.RemoveAt(MaxHighscoreListEntryCount);
 
-            SaveHighscoreList();
+            SaveLeaderboard();
 
             bdrNewHighscore.Visibility = Visibility.Collapsed;
-            bdrHighscoreList.Visibility = Visibility.Visible;
+            bdrLeaderboard.Visibility = Visibility.Visible;
         }
 
         #endregion
+
+        #region Menu
+
+        private void ButtonBackToMenu_Click(object sender, RoutedEventArgs e)
+        {
+            bdrMenu.Visibility = Visibility.Visible;
+            bdrLeaderboard.Visibility = Visibility.Collapsed;
+            bdrEndOfGame.Visibility = Visibility.Collapsed;
+            SnakeScore.Visibility = Visibility.Collapsed;
+            SnakeSpeed.Visibility = Visibility.Collapsed;
+            bdrInstructions.Visibility = Visibility.Collapsed;
+        }
+
+        private void ButtonShowInstructions_Click(object sender, RoutedEventArgs e)
+        {
+            bdrMenu.Visibility = Visibility.Collapsed;
+            bdrInstructions.Visibility = Visibility.Visible;
+        }
+
+        #endregion
+
     }
 }
