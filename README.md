@@ -5,6 +5,7 @@ GitHub: [SnakeWPF](https://github.com/NotCryze/SnakeWPF)
 
 ## Table of contents
 - [Description](#Description)
+- [Main Features](#Main-Features)
 - [Changelog](#Changelog)
 - [ToDo](#ToDo)
 - [Known Issues](#Known-Issues)
@@ -13,44 +14,50 @@ GitHub: [SnakeWPF](https://github.com/NotCryze/SnakeWPF)
 ## Description
 Snake is a simple 2d game, where you play the snake and try to eat as much food as possible with exponentially increasing difficulty.
 
+## Main Features
+- New Game
+- Leaderboard
+- Instructions
+- Settings
+
 ## Changelog
-### v0.9.0 _(Current version)_
+### _v0.9.0_ (Current version)
 - Added audio to snake eat
 - Added audio to snake death
 - Added audio controls to settings
 
-### v0.8.0
+### _v0.8.0_
 - Added settings
 - Clear leaderboard
 
-### v0.7.0
+### _v0.7.0_
 - Added new Font
 - Added Menu
 - Added instructions
 - Added early game cancel button
 
-### v0.6.0
+### _v0.6.0_
 - Added leaderboard
 - Added saving of leaderboard on new highscore
 - Added loading of leadboard on startup
 
-### v0.5.0
+### _v0.5.0_
 - Added WASD controls
 - Draggable window
 - Added styled close button
 
-### v0.4.0
+### _v0.4.0_
 - Added score
 - Added collion checks
 
-### v0.3.0
+### _v0.3.0_
 - Added Food
 
-### v0.2.0
+### _v0.2.0_
 - Added Movement
 - Added arrow key controls
 
-### v0.1.0
+### _v0.1.0_
 - Added Game Area
 - Added the snake
 
