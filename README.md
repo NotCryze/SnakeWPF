@@ -70,7 +70,7 @@ Snake is a simple 2d game, where you play the snake and try to eat as much food 
   - [X] Instructions
   - [ ] Settings
     - [ ] Different Difficulties
-      - [ ] Speed
+      - [X] Speed
       - [ ] Obstacles
     - [X] Clear Leaderboard
     - [X] Audio Controls
