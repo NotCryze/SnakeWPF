@@ -4,11 +4,11 @@
 GitHub: [SnakeWPF](https://github.com/NotCryze/SnakeWPF)
 
 ## Table of contents
-- Description
-- Changelog
-- ToDo
-- Known Issues
-- Bug Reporting
+- [Description](#Description)
+- [Changelog](#Changelog)
+- [ToDo](#ToDo)
+- [Known Issues](#Known_Issues)
+- [Bug Reporting](#Bug_Reporting)
 
 ## Description
 Snake is a simple 2d game, where you play the snake and try to eat as much food as possible with exponentially increasing difficulty.
