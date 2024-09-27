@@ -23,6 +23,8 @@ namespace SnakeWPF
             LoadLeaderboard();
             Style = (Style)FindResource(typeof(Window));
             volumeSlider.Value = 0.1;
+            cbDifficulty.ItemsSource = Enum.GetValues(typeof(Difficulty)).Cast<Difficulty>();
+            cbDifficulty.SelectedIndex = 0;
         }
 
         private SolidColorBrush _snakeBodyColor = Brushes.Blue;
@@ -31,8 +33,8 @@ namespace SnakeWPF
 
         const int SnakeSquareSize = 20;
         const int SnakeStartLength = 3;
-        const int SnakeStartSpeed = 400;
-        const int SnakeSpeedThreshold = 100;
+        private int _snakeStartSpeed = 1000;
+        const int SnakeSpeedThreshold = 50;
         public enum SnakeDirection { Left, Right, Up, Down };
         private SnakeDirection _snakeDirection = SnakeDirection.Right;
         private int _snakeLength;
@@ -47,6 +49,9 @@ namespace SnakeWPF
 
         const int MaxHighscoreListEntryCount = 10;
         public ObservableCollection<SnakeHighscore> Highscores { get; set; } = new ObservableCollection<SnakeHighscore>();
+
+        private enum Difficulty { Easy, Medium, Hard }
+        private Difficulty _currentDifficulty = Difficulty.Easy;
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
@@ -233,12 +238,28 @@ namespace SnakeWPF
             if (_snakeFood != null)
                 GameArea.Children.Remove(_snakeFood);
 
+            // Set the difficulty
+            switch (_currentDifficulty)
+            {
+                case Difficulty.Easy:
+                    _snakeStartSpeed = 1000;
+                    break;
+                case Difficulty.Medium:
+                    _snakeStartSpeed = 500;
+                    break;
+                case Difficulty.Hard:
+                    _snakeStartSpeed = 100;
+                    break;
+                default:
+                    break;
+            }
+
             // Reset game variables
             _currentScore = 0;
             _snakeLength = SnakeStartLength;
             _snakeDirection = SnakeDirection.Right;
             _snakeParts.Add(new SnakePart() { Position = new Point(SnakeSquareSize * 5, SnakeSquareSize * 5) });
-            _gameTickTimer.Interval = TimeSpan.FromMilliseconds(SnakeStartSpeed);
+            _gameTickTimer.Interval = TimeSpan.FromMilliseconds(_snakeStartSpeed);
 
             // Draw the snake again & the first food
             DrawSnake();
@@ -246,6 +267,7 @@ namespace SnakeWPF
 
             // Update the games status to the default
             UpdateGameStatus();
+
 
             // Enable the timer to start off the game  
             _gameTickTimer.IsEnabled = true;
@@ -501,6 +523,28 @@ namespace SnakeWPF
             string filePath = userPath + @"\source\repos\SnakeWPF\Assets\Sounds\" + file;
             mediaElement.Source = new Uri(filePath);
             mediaElement.Play();
+        }
+
+        #endregion
+
+        #region Difficulty
+
+        private void cbDifficulty_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cbDifficulty.SelectedItem)
+            {
+                case Difficulty.Easy:
+                    _currentDifficulty = Difficulty.Easy;
+                    break;
+                case Difficulty.Medium:
+                    _currentDifficulty = Difficulty.Medium;
+                    break;
+                case Difficulty.Hard:
+                    _currentDifficulty = Difficulty.Hard;
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion

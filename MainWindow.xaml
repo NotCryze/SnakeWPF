@@ -183,6 +183,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     
@@ -194,8 +195,10 @@
                         <TextBlock Name="volumeValue" VerticalAlignment="Center"></TextBlock>
                     </WrapPanel>
                     <Slider Grid.Column="1" Grid.Row="1" Minimum="0" Maximum="1" Value="0.1" Width="200" VerticalAlignment="Top" Margin="10" Name="volumeSlider" ValueChanged="volumeSlider_ValueChanged"/>
-                    
-                    
+
+                    <TextBlock Grid.Column="0" Grid.Row="2" Margin="5, 10">Difficulty</TextBlock>
+                    <ComboBox Grid.Column="1" Grid.Row="2" Margin="5, 10" VerticalAlignment="Center" Name="cbDifficulty" SelectionChanged="cbDifficulty_SelectionChanged">
+                    </ComboBox>
 
                     <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="999" Grid.ColumnSpan="2">
                         <Button Margin="0,0,0,5" Padding="5" Click="ButtonBackToMenu_Click">Back to Menu</Button>
