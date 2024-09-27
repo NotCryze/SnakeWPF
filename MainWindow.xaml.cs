@@ -53,6 +53,9 @@ namespace SnakeWPF
         private enum Difficulty { Easy, Medium, Hard }
         private Difficulty _currentDifficulty = Difficulty.Easy;
 
+        private List<UIElement> _obstacles = new List<UIElement>();
+        private SolidColorBrush _obstacleColor = Brushes.Brown;
+
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             DrawGameArea();
@@ -264,6 +267,7 @@ namespace SnakeWPF
             // Draw the snake again & the first food
             DrawSnake();
             DrawSnakeFood();
+            DrawObstacle(10);
 
             // Update the games status to the default
             UpdateGameStatus();
@@ -303,27 +307,38 @@ namespace SnakeWPF
 
         #endregion
 
-        #region Food
+        #region Objects
 
-        private Point GetNextFoodPosition()
+        private Point GetNextObjectPosition()
         {
             int maxX = (int)(GameArea.ActualWidth / SnakeSquareSize);
             int maxY = (int)(GameArea.ActualHeight / SnakeSquareSize);
-            int foodX = _rnd.Next(0, maxX) * SnakeSquareSize;
-            int foodY = _rnd.Next(0, maxY) * SnakeSquareSize;
 
-            foreach (SnakePart snakePart in _snakeParts)
+            Point newPosition;
+            bool isPositionOccupied;
+
+            do
             {
-                if ((snakePart.Position.X == foodX) && (snakePart.Position.Y == foodY))
-                    return GetNextFoodPosition();
-            }
+                int objectX = _rnd.Next(0, maxX) * SnakeSquareSize;
+                int objectY = _rnd.Next(0, maxY) * SnakeSquareSize;
+                newPosition = new Point(objectX, objectY);
 
-            return new Point(foodX, foodY);
+                // Check if this position is occupied by the snake, food, or an obstacle
+                isPositionOccupied = _snakeParts.Any(s => s.Position == newPosition) ||
+                                     (_snakeFood != null &&
+                                      Canvas.GetLeft(_snakeFood) == newPosition.X &&
+                                      Canvas.GetTop(_snakeFood) == newPosition.Y) ||
+                                     _obstacles.Any(o => Canvas.GetLeft(o) == newPosition.X &&
+                                                         Canvas.GetTop(o) == newPosition.Y);
+
+            } while (isPositionOccupied); // Repeat until we find an unoccupied position
+
+            return newPosition;
         }
 
         private void DrawSnakeFood()
         {
-            Point foodPosition = GetNextFoodPosition();
+            Point foodPosition = GetNextObjectPosition();
             _snakeFood = new Ellipse()
             {
                 Width = SnakeSquareSize,
@@ -333,6 +348,24 @@ namespace SnakeWPF
             GameArea.Children.Add(_snakeFood);
             Canvas.SetTop(_snakeFood, foodPosition.Y);
             Canvas.SetLeft(_snakeFood, foodPosition.X);
+        }
+
+        private void DrawObstacle(int obstacleAmount)
+        {
+            for (int i = 0; i < obstacleAmount; i++)
+            {
+                Point obstaclePosition = GetNextObjectPosition();
+                UIElement obstacle = new Rectangle()
+                {
+                    Width = SnakeSquareSize,
+                    Height = SnakeSquareSize,
+                    Fill = _obstacleColor
+                };
+                _obstacles.Add(obstacle);
+                GameArea.Children.Add(obstacle);
+                Canvas.SetTop(obstacle, obstaclePosition.Y);
+                Canvas.SetLeft(obstacle, obstaclePosition.X);
+            }
         }
 
         private void EatSnakeFood()
@@ -355,23 +388,40 @@ namespace SnakeWPF
         {
             SnakePart snakeHead = _snakeParts[_snakeParts.Count - 1];
 
+            // Check if the snake eats the food
             if ((snakeHead.Position.X == Canvas.GetLeft(_snakeFood)) && (snakeHead.Position.Y == Canvas.GetTop(_snakeFood)))
             {
                 EatSnakeFood();
                 return;
             }
 
+            // Check if the snake hits the walls
             if ((snakeHead.Position.Y < 0) || (snakeHead.Position.Y >= GameArea.ActualHeight) ||
-            (snakeHead.Position.X < 0) || (snakeHead.Position.X >= GameArea.ActualWidth))
+                (snakeHead.Position.X < 0) || (snakeHead.Position.X >= GameArea.ActualWidth))
             {
                 EndGame();
             }
 
+            // Check if the snake hits itself
             foreach (SnakePart snakeBodyPart in _snakeParts.Take(_snakeParts.Count - 1))
             {
                 if ((snakeHead.Position.X == snakeBodyPart.Position.X) && (snakeHead.Position.Y == snakeBodyPart.Position.Y))
+                {
                     EndGame();
+                    return;
+                }
             }
+
+            // Check if the snake hits an obstacle
+            foreach (UIElement obstacle in _obstacles)
+            {
+                if ((snakeHead.Position.X == Canvas.GetLeft(obstacle)) && (snakeHead.Position.Y == Canvas.GetTop(obstacle)))
+                {
+                    EndGame();
+                    return;
+                }
+            }
+
         }
 
         #endregion
