@@ -81,7 +81,7 @@
                 <Border.Background>
                     <VisualBrush>
                         <VisualBrush.Visual>
-                            <Image gif:ImageBehavior.AnimatedSource="C:\Users\sammy\Source\Repos\SnakeWPF\Assets\Gifs\snake.gif" gif:ImageBehavior.AutoStart="True" gif:ImageBehavior.RepeatBehavior="1"/>
+                            <Image gif:ImageBehavior.AnimatedSource="C:\Users\asus\Source\Repos\SnakeWPF\Assets\Gifs\snake.gif" gif:ImageBehavior.AutoStart="True" gif:ImageBehavior.RepeatBehavior="1"/>
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.Background>
