@@ -488,7 +488,7 @@ namespace SnakeWPF
         private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             mediaElement.Volume = volumeSlider.Value;
-            volumeValue.Text = Math.Floor(mediaElement.Volume * 100).ToString();
+            volumeValue.Text = Math.Floor(mediaElement.Volume * 100).ToString() + "%";
         }
 
         #endregion
