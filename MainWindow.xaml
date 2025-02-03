@@ -5,8 +5,206 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SnakeWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        x:Name="window"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        Title="Snake" 
+        SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        WindowStyle="None" MouseDown="Window_MouseDown"
+        ContentRendered="Window_ContentRendered" KeyDown="Window_KeyDown">
+    <!--Resources-->
+    <Window.Resources>
+        <Style x:Key="closeBtn" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" Padding="5, 0, 5, 0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Background" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <CollectionViewSource Source="{Binding ElementName=window, Path=Highscores}" x:Key="HighScoreListViewSource">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription Direction="Descending" PropertyName="Score" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
 
-    </Grid>
+    <!--Window-->
+    <DockPanel Background="Black">
+        <Grid DockPanel.Dock="Top" Name="pnlTitleBar">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontFamily" Value="Consolas" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="FontSize" Value="24" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Style>
+            </Grid.Resources>
+
+            <!--Top Bar-->
+            <WrapPanel Margin="10,0,0,0" Name="SnakeScore" Visibility="Collapsed">
+                <TextBlock FontFamily="{StaticResource Default-Font}" FontSize="16" Padding="0" Margin="0">Score:</TextBlock>
+                <TextBlock FontFamily="{StaticResource Default-Font}" FontSize="16" Padding="0" Margin="0" Name="tbStatusScore">0</TextBlock>
+            </WrapPanel>
+            <WrapPanel Grid.Column="1" Name="SnakeSpeed" Visibility="Collapsed">
+                <TextBlock FontFamily="{StaticResource Default-Font}" FontSize="16" Padding="0" Margin="0">Speed:</TextBlock>
+                <TextBlock FontFamily="{StaticResource Default-Font}" FontSize="16" Padding="0" Margin="0" Name="tbStatusSpeed">0</TextBlock>
+            </WrapPanel>
+            <Button Grid.Column="2" DockPanel.Dock="Right" Name="btnClose" Click="BtnClose_Click" FontFamily="Segoe UI" Style="{StaticResource closeBtn}">X</Button>
+
+        </Grid>
+        
+        <MediaElement Name="mediaElement" LoadedBehavior="Manual" UnloadedBehavior="Stop" />
+        <Canvas Name="GameArea" ClipToBounds="True" Width="500" Height="500">
+            <!--Menu-->
+            <Border BorderBrush="Black" BorderThickness="2" Width="500" Height="500" Name="bdrMenu" Panel.ZIndex="1">
+                <Border.Background>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Image gif:ImageBehavior.AnimatedSource="C:\Users\asus\Source\Repos\SnakeWPF\Assets\Gifs\snake.gif" gif:ImageBehavior.AutoStart="True" gif:ImageBehavior.RepeatBehavior="1"/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.Background>
+                <Grid VerticalAlignment="Center">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock FontWeight="Bold" FontSize="50" HorizontalAlignment="Center" Margin="0,0,0,20" FontFamily="Comic Sans MS">
+                            <TextBlock.Foreground>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="Blue" Offset="0"/>
+                                    <GradientStop Color="LightBlue" Offset="1"/>
+                                </RadialGradientBrush>
+                            </TextBlock.Foreground>Snake</TextBlock>
+                        <Button Margin="0,0,0,5" Padding="5" FontSize="20" HorizontalAlignment="Center" Width="150" Name="btnStartBewGane" Click="BtnStartNewGame_Click" IsDefault="True">START</Button>
+                        <Button Margin="0,0,0,5" Padding="5" FontSize="10" HorizontalAlignment="Center" Width="150" Name="btnShowLeaderboard" Click="BtnShowLeaderboard_Click" >Leaderboard</Button>
+                        <Button Margin="0,0,0,5" Padding="5" FontSize="10" HorizontalAlignment="Center" Width="150" Name="btnShowInstructions" Click="ButtonShowInstructions_Click">Instructions</Button>
+                        <Button Margin="0,0,0,5" Padding="5" FontSize="10" HorizontalAlignment="Center" Width="150" Name="btnShowSettings" Click="btnShowSettings_Click">Settings</Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--Leaderboard-->
+            <Border BorderBrush="Silver" BorderThickness="2" Width="500" Height="500" Name="bdrLeaderboard" Panel.ZIndex="1" Visibility="Collapsed">
+                <Grid Background="LightBlue">
+                    <StackPanel Orientation="Vertical">
+                        <Border BorderThickness="0,0,0,2" BorderBrush="Silver" Margin="0,10">
+                            <TextBlock HorizontalAlignment="Center" FontSize="34" FontWeight="Bold">Leaderboard</TextBlock>
+                        </Border>
+                        <ItemsControl ItemsSource="{Binding Source={StaticResource HighScoreListViewSource}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="7">
+                                        <TextBlock Text="{Binding PlayerName}" DockPanel.Dock="Left" FontSize="16"></TextBlock>
+                                        <TextBlock Text="{Binding Score}" DockPanel.Dock="Right" FontSize="16" HorizontalAlignment="Right"></TextBlock>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <Button Margin="0,0,0,5" Padding="5" Click="ButtonBackToMenu_Click">Back to Menu</Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--New Highscore-->
+            <Border BorderBrush="Silver" BorderThickness="2" Width="400" Height="400" Canvas.Left="50" Canvas.Top="50" Name="bdrNewHighscore" Panel.ZIndex="1" Visibility="Collapsed">
+                <StackPanel Orientation="Vertical" Background="AliceBlue">
+                    <TextBlock HorizontalAlignment="Center" FontSize="10" FontWeight="Bold" Margin="20">New Highscore!</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="16">  
+                            Enter your name
+                    </TextBlock>
+                    <TextBox Name="txtPlayerName" FontSize="28" FontWeight="Bold" MaxLength="12" Margin="20" HorizontalContentAlignment="Center"></TextBox>
+                    <Button Name="btnAddToHighscoreList" FontSize="16" HorizontalAlignment="Center" Click="BtnAddToLeaderboard_Click" Padding="10,5">Add to Leaderboard</Button>
+                </StackPanel>
+            </Border>
+
+            <!--Death Screen-->
+            <Border BorderBrush="Silver" BorderThickness="2" Width="400" Height="400" Canvas.Left="50" Canvas.Top="50" Name="bdrEndOfGame" Panel.ZIndex="1" Visibility="Collapsed">
+                <Grid Background="White">
+                    <StackPanel Orientation="Vertical" Background="AliceBlue">
+                        <TextBlock HorizontalAlignment="Center" FontSize="40" FontWeight="Bold" Margin="0,20,0,0">You died!</TextBlock>
+                        <TextBlock Margin="20" TextAlignment="Center" FontSize="16">Your score:</TextBlock>
+                        <TextBlock Name="tbFinalScore" TextAlignment="Center" FontSize="48" FontWeight="Bold" Foreground="Maroon">0</TextBlock>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <Button Margin="0,0,0,5" Padding="5" Click="BtnStartNewGame_Click">New Game</Button>
+                        <Button Margin="0,0,0,5" Padding="5" Click="ButtonBackToMenu_Click">Back to Menu</Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--Instructions-->
+            <Border BorderBrush="Silver" BorderThickness="2" Width="500" Height="500" Name="bdrInstructions" Panel.ZIndex="1" Visibility="Collapsed">
+                <Grid Background="LightBlue">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock FontSize="16" FontWeight="Normal" Margin="10,20" TextWrapping="WrapWithOverflow">
+                            1. Use the Arrow keys or WASD to control the green snake.
+                        </TextBlock>
+                        <TextBlock FontSize="16" FontWeight="Normal" Margin="10,20" TextWrapping="Wrap">
+                            2. Make it eat the red apples.
+                        </TextBlock>
+                        <TextBlock FontSize="16" FontWeight="Normal" Margin="10,20" TextWrapping="Wrap">
+                            3. Be sure not to crash into the walls or the tail of the snake!
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <Button Margin="0,0,0,5" Padding="5" Click="ButtonBackToMenu_Click">Back to Menu</Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--Settings-->
+            <Border BorderBrush="Silver" BorderThickness="2" Width="500" Height="500" Name="bdrSettings" Panel.ZIndex="1" Visibility="Collapsed">
+                <Grid Background="LightBlue">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="5, 10">Clear Leaderboard</TextBlock>
+                    <Button Grid.Column="1" Grid.Row="0" Margin="5, 10" Name="btnClearLeaderboard" Click="btnClearLeaderboard_Click">Clear</Button>
+
+                    <WrapPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="5, 10">
+                        <TextBlock>Volume:</TextBlock>
+                        <TextBlock Name="volumeValue" VerticalAlignment="Center"></TextBlock>
+                    </WrapPanel>
+                    <Slider Grid.Column="1" Grid.Row="1" Minimum="0" Maximum="1" Value="0.1" Width="200" VerticalAlignment="Top" Margin="10" Name="volumeSlider" ValueChanged="volumeSlider_ValueChanged"/>
+
+                    <TextBlock Grid.Column="0" Grid.Row="2" Margin="5, 10">Difficulty</TextBlock>
+                    <ComboBox Grid.Column="1" Grid.Row="2" Margin="5, 10" VerticalAlignment="Center" Name="cbDifficulty" SelectionChanged="cbDifficulty_SelectionChanged">
+                    </ComboBox>
+
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="999" Grid.ColumnSpan="2">
+                        <Button Margin="0,0,0,5" Padding="5" Click="ButtonBackToMenu_Click">Back to Menu</Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Canvas>
+    </DockPanel>
 </Window>
